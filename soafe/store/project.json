@@ -1,0 +1,153 @@
+{
+  "name": "store",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "store/src",
+  "prefix": "soafe",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:webpack-browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/store/browser",
+        "index": "store/src/index.html",
+        "main": "store/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "store/tsconfig.app.json",
+        "assets": ["store/src/favicon.ico", "store/src/assets"],
+        "styles": ["store/src/styles.css"],
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "store/webpack.config.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all",
+          "customWebpackConfig": {
+            "path": "store/webpack.prod.config.js"
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@nrwl/angular:module-federation-dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "store:build:production"
+        },
+        "development": {
+          "browserTarget": "store:build:development"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4200,
+        "publicHost": "http://localhost:4200"
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "store:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["store/**/*.ts", "store/**/*.html"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "store/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "server": {
+      "dependsOn": ["build"],
+      "executor": "@nrwl/angular:webpack-server",
+      "options": {
+        "outputPath": "dist/store/server",
+        "main": "store/server.ts",
+        "tsConfig": "store/tsconfig.server.json",
+        "customWebpackConfig": {
+          "path": "store/webpack.server.config.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "outputHashing": "media"
+        },
+        "development": {
+          "optimization": false,
+          "sourceMap": true,
+          "extractLicenses": false
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-ssr": {
+      "executor": "@nrwl/angular:module-federation-dev-ssr",
+      "configurations": {
+        "development": {
+          "browserTarget": "store:build:development",
+          "serverTarget": "store:server:development"
+        },
+        "production": {
+          "browserTarget": "store:build:production",
+          "serverTarget": "store:server:production"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "prerender": {
+      "executor": "@nguniversal/builders:prerender",
+      "options": {
+        "routes": ["/"]
+      },
+      "configurations": {
+        "development": {
+          "browserTarget": "store:build:development",
+          "serverTarget": "store:server:development"
+        },
+        "production": {
+          "browserTarget": "store:build:production",
+          "serverTarget": "store:server:production"
+        }
+      },
+      "defaultConfiguration": "production"
+    }
+  },
+  "tags": []
+}
