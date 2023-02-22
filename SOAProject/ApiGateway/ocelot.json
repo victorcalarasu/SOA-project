@@ -1,0 +1,58 @@
+{
+  "Routes": [
+    // Customer Web API
+    {
+      "UpstreamPathTemplate": "/api/Customer",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "customerwebapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Customer"
+    },
+    {
+      "UpstreamPathTemplate": "/api/Customer/{customerId}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "customerwebapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Customer/{customerId}"
+    },
+
+    //Book Web API
+    {
+      "UpstreamPathTemplate": "/api/Book",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "bookwebapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Book"
+    },
+    {
+      "UpstreamPathTemplate": "/api/Book/{bookId}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "bookwebapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Book/{bookId}"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:8007"
+  }
+}

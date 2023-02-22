@@ -1,0 +1,63 @@
+version: '3.4'
+
+networks:
+  backend:
+  frontend:
+
+services:
+  customerdb:
+    container_name: customer-db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=password@12345#
+    networks:
+      - backend
+    ports:
+      - 18001:1433
+
+  customerwebapi:
+    container_name: customer-api
+    image: ${DOCKER_REGISTRY-}customerwebapi
+    build:
+      context: .
+      dockerfile: CustomerWebApi/Dockerfile
+    networks:
+      - backend
+    environment:
+      - DB_HOST=customerdb
+      - DB_NAME=soa
+      - DB_SA_PASSWORD=password@12345#
+  bookdb:
+    container_name: book-db
+    image: mysql:8.0.29-oracle
+    environment:
+     - MYSQL_ROOT_PASSWORD=password@12345#
+    ports:
+     - 18003:3306
+    networks:
+     - backend
+
+  bookwebapi:
+    container_name: book-api
+    image: ${DOCKER_REGISTRY-}bookwebapi
+    build:
+      context: .
+      dockerfile: BookWebApi/Dockerfile
+    networks:
+      - backend
+    environment:
+      - DB_HOST=bookdb
+      - DB_NAME=book
+      - DB_ROOT_PASSWORD=password@12345#
+  apigateway:
+    container_name: api-gateway
+    image: ${DOCKER_REGISTRY-}apigateway
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+    ports:
+      - 8007:80
+    networks:
+      - backend
+
